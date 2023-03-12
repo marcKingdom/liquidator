@@ -33,12 +33,6 @@ def load_user():
         g.user = None
     else:
         g.user = db.session.execute(db.select(User).filter_by(id=user_id)).scalar_one()
-@app.route("/makebase")
-def makebase():
-    if 'username' in session:
-        print("logged in")
-    return render_template('index.html')
-
 
 @app.route("/")
 def index():
