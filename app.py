@@ -36,7 +36,7 @@ def load_user():
 
 @app.route("/")
 def index():
-    if 'username' in session:
+    if 'user_id' in session:
         print("logged in")
     return render_template('index.html')
 
