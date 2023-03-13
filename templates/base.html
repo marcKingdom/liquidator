@@ -1,11 +1,28 @@
-<!doctype html>
-<title>{% block title %}{% endblock %} - Liquidator</title>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="static/css/stylesheet.css">
+    <meta charset="utf-8">
+    <meta name="description" content="Liquidator">
+   <title>{% block title %}{% endblock %} - Liquidator</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>   
+    <script src="{{url_for('static',filename='js/script.js')}}" defer></script>
+  </head>
+<body>
+<header>Liquidator Logo</header>
+    <main>
+      <div id="bdiv">          
 <nav>
   <h1>Liquidator</h1>
   <ul>
     {% if g.user %}
-      <li><span>{{ g.user['username'] }}</span>
+      <li><span> hey {{ g.user['username'] }}</span>
       <li><a href="{{ url_for('logout') }}">Log Out</a>
+      <button class="send__data__btn">Send Data</button>
+      <button id="connectButton">Connect</button>
+      <button id="getAccounts">get accounts</button>
+      <input type="text" id="getAccountsResults" readonly>
     {% else %}
       <li><a href="{{ url_for('register') }}">Register</a>
       <li><a href="{{ url_for('login') }}">Log In</a>
@@ -21,3 +38,8 @@
   {% endfor %}
   {% block content %}{% endblock %}
 </section>
+</form>
+      </div>
+    </main>
+  </body>
+</html>
