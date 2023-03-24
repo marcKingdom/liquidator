@@ -8,9 +8,13 @@ On gentoo for example:
 $eselect python list
 
 Available Python interpreters, in order of preference:
+
   [1]   python3.9
+  
   [2]   python3.10
+  
   [3]   python3.11 (fallback)
+  
 #eselect python set 2
 
 Create a postgresql database, key in password and database name in app.py by editing the following line replacing databaseUser, password and databaseName
