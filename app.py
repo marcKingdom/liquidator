@@ -13,7 +13,22 @@ from flask import (
 from werkzeug.security import check_password_hash, generate_password_hash
 #for turning ansynchronous request data back into an object
 import json
-# create the sql extension
+#for sending tokens
+#from https://paohuee.medium.com/interact-binance-smart-chain-using-python-4f8d745fe7b7
+from web3 import Web3
+import time
+import requests
+from PriceMachine import calculateWalletValue
+#for binance smart chain network
+bsc = "https://bsc-dataseed.binance.org/"
+url_eth = "https://api.bscscan.com/api"
+web3 = Web3(Web3.HTTPProvider(bsc))
+
+if web3.is_connected():
+    print("connected to binance network")
+else:
+    print("unable to connect to binance network!")
+# create the sql connection
 db = SQLAlchemy()
 app = Flask(__name__)
 app.config.from_mapping(SECRET_KEY='dev')
@@ -27,7 +42,22 @@ class User(db.Model):
     password = db.Column(db.String)
     walletAddress = db.Column(db.String)
     walletConnected = db.Column(db.Boolean)
+    walletValue = db.Column(db.Float)
+    #adress, key, token, sellPrice, latency
+    accounts = db.relationship('Account', backref='user')
+#in future new bank accounts will be opened on binance smart chain when an account is opened
+#accounts will hold funds that will be liquidated if certain price conditions are mt
+class Account(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+    address = db.Column(db.String)
+    key = db.Column(db.String)
+    token = db.Column(db.String)
+    latency = db.Column(db.Integer)
+    sellPrice = db.Column(db.String)
 with app.app_context():
+    #uncomment following line to clean database on startup
+    #db.drop_all()
     db.create_all()
 #before every request the database and g object (instance object) must be synced
 @app.before_request
@@ -44,16 +74,25 @@ def index():
     if request.method == "POST":
         jsonData = request.get_json()
         if 'account' in jsonData:
-            print(jsonData['account'])
+            #print(jsonData['account'])
             user = g.user
             user.walletConnect = True
             user.walletAddress = int(jsonData['account'], 16)
+            user.walletValue = float(calculateWalletValue(user.walletAddress))
+            #print("wallet value")
+            #print(user.walletValue)
             db.session.commit()
+            #this is a temporary measure, in future a message will be shown to the user
             return {
                 'response' : 'user account accepted'
             }
+        if 'getWalletValues' in jsonData:
+            print("getting wallet values")
+            calculateWalletValue(g.user.walletAddress)
+            return render_template('index.html')          
         else:
             print("data sent" + g.user.walletAddress)
+            #this is a temporary measure, in future a message will be shown to the user
             return {
                 'response' : 'user data accepted'
             }
@@ -102,10 +141,37 @@ def register():
             error = "Account created."
             print("account created")
             return redirect(url_for("index"))
-            #return redirect(url_for("index", id=user.id))
         flash(error)
     return render_template('register.html')
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('index'))
+
+@app.route('/openAccount', methods=('GET', 'POST'))
+def openAccount():
+    if request.method == 'POST':
+        user = g.user
+        newAccount = 0
+        newKey = 0
+        coin = request.form['token']
+        latency = request.form['latency']
+        error = None
+        if not coin:
+            error = 'coin is required.'
+        elif not latency:
+            error = 'latency is required.'
+        if error is None:
+            account = Account(
+                owner = user.id,
+                address = newAccount,
+                key = newKey,
+                token = request.form["token"],
+                latency = request.form["latency"],
+            )
+            db.session.add(account)
+            db.session.commit()
+            return redirect(url_for("index"))
+        flash(error)
+    return render_template('openAccount.html')
+
