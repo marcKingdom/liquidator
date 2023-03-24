@@ -9,7 +9,7 @@ btn.addEventListener('click', function () {
         },
         method : 'POST',
         body : JSON.stringify( {
-            'userActionA' : 'data from user',
+            'getWalletValues' : 'data from user',
         })
     })
     .then(function (response){
@@ -32,6 +32,7 @@ btn.addEventListener('click', function () {
 const initialize = async () => {
   //Some parts of the following code is from the metamask "create a simple dapp" tutorial
   //https://docs.metamask.io/guide/create-dapp.html
+  //onClickConnect
   const onboardButton = document.getElementById('connectButton');
   const getAccountsButton = document.getElementById('getAccounts');
   const getAccountsResults = document.getElementById('getAccountsResult');
@@ -80,7 +81,6 @@ const initialize = async () => {
     //This is modified code from the from the metamask "create a simple dapp" tutorial 
     //https://docs.metamask.io/guide/create-dapp.html
     getAccountsButton.onclick = async () => {
-    alert("getting accounts")
       try {
         const _accounts = await ethereum.request({
           method: 'eth_accounts',
