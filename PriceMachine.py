@@ -96,7 +96,7 @@ def getBalance(walletAddress, TokenAddress):
     #walletAddress = 0x531FEbfeb9a61D948c384ACFBe6dCc51057AEa7e
     #TokenAddress = 0x2170Ed0880ac9A755fd29B2688956BD959F933F8
     contract_address = web3.to_checksum_address(TokenAddress)
-    API_ENDPOINT = url_eth+"?module=contract&action=getabi&apikey=M5VFBW68P5AA8BK264F9QZSF3AEMZ8KK2I&address="+str(contract_address)
+    API_ENDPOINT = url_eth+"?module=contract&action=getabi&address="+str(contract_address)
     r = requests.get(url = API_ENDPOINT)
     response = r.json()
     try:
@@ -129,7 +129,7 @@ def getAllCurrency(walletAddress):
     #remove page=1 in production enviroment, this is to limit data
     #	to prevent free bscscan account request overload during 
     #	development.
-    bscscanAPI = "https://api.bscscan.com/api?module=account&action=tokentx&page=1&offset=5&startblock=0&endblock=999999999&sort=asc&apikey=M5VFBW68P5AA8BK264F9QZSF3AEMZ8KK2I&address="
+    bscscanAPI = "https://api.bscscan.com/api?module=account&action=tokentx&page=1&offset=5&startblock=0&endblock=999999999&sort=asc&address="
     callBscScan = str(bscscanAPI + walletAddress)
     bscResponse = requests.get(callBscScan)
     try:
