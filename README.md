@@ -1,7 +1,7 @@
 # liquidator
-#To install first install postgresql on your POSIX system.
-#Select python 3.10
-Nn gentoo for example:
+To install first install postgresql on your POSIX system.
+Select python 3.10
+On gentoo for example:
 $eselect python list
 Available Python interpreters, in order of preference:
   [1]   python3.9
