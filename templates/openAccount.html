@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Open Account{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="token">Token</label>
+    <input name="token" id="token" required>
+    <br>
+    <label for="latency">Latency</label>
+    <input type="number" name="latency" id="latency" required>
+    <br>
+    <input type="submit" value="Open Liquidating Savings Account">
+  </form>
+  <br>
+{% endblock %}
