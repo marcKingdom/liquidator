@@ -6,7 +6,7 @@
 body {
   background-color: #472c41;
   font-family: 'Gadugi','Helvetica','San Fransisco',sans-serif;
-  color: #32a852;
+  color: pink;
   font-weight: bold;
   font-size: 24px;
 }
@@ -20,7 +20,7 @@ body {
 }
 
 a:link {
-	  color: pink;
+	  color: #32a852;
   }  
 a:visited {
     color: orange;
@@ -78,3 +78,6 @@ a:active {
 .ui-helper-hidden-accessible{
   visibility: hidden;
 }
+ ul {
+  list-style-type: none;
+ }
